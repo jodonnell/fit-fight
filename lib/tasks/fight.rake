@@ -19,6 +19,7 @@ namespace :fight do
 
     sim = Fight.new(player1, player2)
     output = sim.fight
-    puts output.join('<br>')
+    full_output = "<html><body>#{output.join('<br>')}</body></html>"
+    FightMailer.fight_email(jacob, chief, full_output).deliver_now
   end
 end
