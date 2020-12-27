@@ -4,3 +4,13 @@
 <p>
   The time is now: <%= Time.now %>
 </p>
+
+<%= form_with url: "/daily-exercise", method: :post do |f| %>
+  <%= f.label :pushups, "Push Ups:" %>
+  <%= f.number_field :pushups, value: @pushups %>
+
+  <%= f.label :pushups, "Squats:" %>
+  <%= f.number_field :squats, value: @squats %>
+
+  <%= f.submit "Save" %>
+<% end %>
