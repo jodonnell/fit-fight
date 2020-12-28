@@ -2,44 +2,49 @@ class Fight
   def initialize player1, player2
     @player1 = player1
     @player2 = player2
+    @output = []
   end
 
   def fight
-    output = []
+    intro @player1
+    intro @player2
+    newline
+
     5.times do |round|
-      output.push "Round #{round + 1}"
+      @output.push "Round #{round + 1}"
 
-      attack @player1, @player2, output
-      attack @player2, @player1, output
+      attack @player1, @player2
+      attack @player2, @player1
 
-      p1_dead = player_dead?(@player1, output)
-      p2_dead = player_dead?(@player2, output)
+      p1_dead = player_dead?(@player1)
+      p2_dead = player_dead?(@player2)
       break if p1_dead || p2_dead
+      newline
     end
 
     if (@player1[:hp] > @player2[:hp]) && @player1[:hp] > 0
-      output.push("#{@player1[:name]} wins")
+      @output.push("#{@player1[:name]} wins")
     end
 
     if (@player2[:hp] > @player1[:hp]) && @player2[:hp] > 0
-      output.push("#{@player2[:name]} wins")
+      @output.push("#{@player2[:name]} wins")
     end
 
-    output
+    @output
   end
 
-  def attack attacker, defender, output
+  def attack attacker, defender
       ap = attack_power attacker
       bp = block_power defender
 
       damage = (ap - bp)
       defender[:hp] = defender[:hp] - damage
 
-      output.push("#{attacker[:name]} attacked for #{ap.round} damage")
-      output.push("#{defender[:name]} blocked #{bp.round} damage")
-      output.push("#{defender[:name]} took #{damage.round} damage")
-      output.push("#{defender[:name]} has #{defender[:hp].round} life left")
-      output.push("")
+      @output.push("#{attacker[:name]} attacked for #{ap.round} damage")
+      @output.push("#{defender[:name]} blocked #{bp.round} damage")
+      @output.push("#{defender[:name]} took #{damage.round} damage")
+      @output.push("#{defender[:name]} has #{defender[:hp].round} life left")
+      @output.push("")
   end
 
   def attack_power player
@@ -54,11 +59,19 @@ class Fight
       rand(min_block...max_block)
   end
 
-  def player_dead? player, output
+  def player_dead? player
     dead = player[:hp] <= 0
     if dead
-      output.push("#{player[:name]} is dead")
+      @output.push("#{player[:name]} is dead")
     end
     dead
+  end
+
+  def intro player
+    @output.push("#{player[:name]} did #{player[:pushups]} pushups and #{player[:squats]} squats")
+  end
+
+  def newline
+    @output.push("")
   end
 end
