@@ -11,6 +11,12 @@
   </head>
 
   <body>
+      <header>
+          <h2>Fit Fight!</h2>
+          <% if current_user %>
+            <%= link_to "Logout", destroy_user_session_path, :method => :delete, :data => { :no_turbolink => true } %>
+          <% end %>
+      </header>
       <p class="notice"><%= notice %></p>
       <p class="alert"><%= alert %></p>
       <%= yield %>
