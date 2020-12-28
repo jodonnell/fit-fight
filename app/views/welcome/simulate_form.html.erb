@@ -1,0 +1,9 @@
+<div class="form">
+<%= form_with url: "/simulate", method: :post do |f| %>
+  Jacob:
+  <%= render "exercises", form: f, postfix: '1', values: @player1_values %>
+  Chief:
+  <%= render "exercises", form: f, postfix: '2', values: @player2_values %>
+  <%= f.submit "Simulate" %>
+<% end %>
+</div>

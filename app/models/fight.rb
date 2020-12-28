@@ -5,6 +5,10 @@ class Fight
     @output = []
   end
 
+  def self.default_vars
+    { min_damage: 5, max_damage: 10, min_block: 0, max_block: 5, pushups: 0, squats: 0, planks: 0, name: '', hp: 40, has_evaded: false }
+  end
+
   def fight
     intro @player1
     intro @player2
@@ -23,10 +27,14 @@ class Fight
     end
 
     if (@player1[:hp] > @player2[:hp]) && @player1[:hp] > 0
+      @player1[:wins] = true
+      @player2[:wins] = false
       @output.push("#{@player1[:name]} wins")
     end
 
     if (@player2[:hp] > @player1[:hp]) && @player2[:hp] > 0
+      @player2[:wins] = true
+      @player1[:wins] = false
       @output.push("#{@player2[:name]} wins")
     end
 

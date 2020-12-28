@@ -1,18 +1,6 @@
 <div class="form">
 <%= form_with url: "/daily-exercise", method: :post do |f| %>
-  <div class="form-line">
-      <%= f.label :pushups, "Push Ups:" %>
-      <%= f.number_field :pushups, value: @pushups %>
-  </div>
-
-  <div class="form-line">
-      <%= f.label :pushups, "Squats:" %>
-      <%= f.number_field :squats, value: @squats %>
-  </div>
-  <div class="form-line">
-      <%= f.label :planks, "Plank minutes:" %>
-      <%= f.number_field :planks, value: @planks %>
-  </div>
+  <%= render "exercises", form: f, values: @values %>
   <%= f.submit "Save" %>
 <% end %>
 </div>

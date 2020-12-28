@@ -1,0 +1,15 @@
+<% postfix = '' if local_assigns[:postfix].nil? %>
+
+<div class="form-line">
+    <%= form.label "pushups#{postfix}", "Push Ups:" %>
+    <%= form.number_field "pushups#{postfix}", value: values[:pushups] %>
+</div>
+
+<div class="form-line">
+    <%= form.label "squats#{postfix}", "Squats:" %>
+    <%= form.number_field "squats#{postfix}", value: values[:squats] %>
+</div>
+<div class="form-line">
+    <%= form.label "planks#{postfix}", "Plank minutes:" %>
+    <%= form.number_field "planks#{postfix}", value: values[:planks] %>
+</div>
