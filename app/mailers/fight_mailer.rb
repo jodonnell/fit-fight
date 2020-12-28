@@ -4,5 +4,8 @@ class FightMailer < ApplicationMailer
     mail(to: player1.email, subject: 'Fight results') do
       render plain: output
     end
+    mail(to: player2.email, subject: 'Fight results') do
+      render plain: output
+    end
   end
 end
