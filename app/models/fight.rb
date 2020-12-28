@@ -34,29 +34,44 @@ class Fight
   end
 
   def attack attacker, defender
-      ap = attack_power attacker
-      bp = block_power defender
+    ap = attack_power attacker
+    bp = block_power defender
 
-      damage = (ap - bp)
-      defender[:hp] = defender[:hp] - damage
+    did_evade = evaded? defender
 
-      @output.push("#{attacker[:name]} attacked for #{ap.round} damage")
+    damage = (ap - bp)
+    defender[:hp] = defender[:hp] - damage unless did_evade
+
+    @output.push("#{attacker[:name]} attacked for #{ap.round} damage")
+    if did_evade
+      @output.push("#{defender[:name]} swiftly dodged the attack")
+    else
       @output.push("#{defender[:name]} blocked #{bp.round} damage")
       @output.push("#{defender[:name]} took #{damage.round} damage")
       @output.push("#{defender[:name]} has #{defender[:hp].round} life left")
-      @output.push("")
+    end
+    @output.push("")
   end
 
   def attack_power player
-      min_attack = player[:min_damage] * (1 + player[:pushups] / 100.0)
-      max_attack = player[:max_damage] * (1 + player[:pushups] / 100.0)
-      rand(min_attack...max_attack)
+    min_attack = player[:min_damage] * (1 + player[:pushups] / 100.0)
+    max_attack = player[:max_damage] * (1 + player[:pushups] / 100.0)
+    rand(min_attack...max_attack)
   end
 
   def block_power player
-      min_block = player[:min_block] * (1 + player[:squats] / 100.0)
-      max_block = player[:max_block] * (1 + player[:squats] / 100.0)
-      rand(min_block...max_block)
+    min_block = player[:min_block] * (1 + player[:squats] / 100.0)
+    max_block = player[:max_block] * (1 + player[:squats] / 100.0)
+    rand(min_block...max_block)
+  end
+
+  def evaded? player
+    return false if player[:has_evaded]
+    chance = [player[:planks] * 4, 20].min
+    has_evaded = rand(0...100) < chance
+
+    player[:has_evaded] = true if has_evaded
+    return has_evaded
   end
 
   def player_dead? player
@@ -68,7 +83,7 @@ class Fight
   end
 
   def intro player
-    @output.push("#{player[:name]} did #{player[:pushups]} pushups and #{player[:squats]} squats")
+    @output.push("#{player[:name]} did #{player[:pushups]} pushups, #{player[:squats]} squats, #{player[:planks]} minutes of planks")
   end
 
   def newline
