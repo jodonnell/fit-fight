@@ -12,7 +12,7 @@ namespace :fight do
     c_exercise = DailyExercise.find_by(user_id: 2, date: yesterday)
 
     player1 = Fight.default_vars
-    player1[:name] = Jacob
+    player1[:name] = 'Jacob'
     player2 = Fight.default_vars
     player2[:name] = 'Chief'
 
