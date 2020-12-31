@@ -3,36 +3,42 @@ class WelcomeController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    todays_exercises = DailyExercise.find_by(user_id: current_user['id'], date: Date.today)
-    @values = { pushups: 0, squats: 0, planks: 0 }
-    if todays_exercises
-      @values[:pushups] = todays_exercises.pushups
-      @values[:squats] = todays_exercises.squats
-      @values[:planks] = todays_exercises.planks
+    @exercises = Exercise.all
+
+    @todays_exercises = DailyExercise.get_user_and_day current_user['id'], Date.today
+    @values = Exercise.empty_hash
+
+    @todays_exercises.exercise_counts.each do |count|
+      @values[count.exercise.name] = count.count
     end
   end
 
   def update
     todays_exercises = DailyExercise.find_by(user_id: current_user['id'], date: Date.today)
-    if todays_exercises
-      todays_exercises.pushups = params['pushups'].to_i
-      todays_exercises.squats = params['squats'].to_i
-      todays_exercises.planks = params['planks'].to_i
-      todays_exercises.save
-    else
-      todays_exercises = DailyExercise.new(
+
+    unless todays_exercises
+      todays_exercises = DailyExercise.create(
         user_id: current_user['id'],
         date: Date.today,
-        pushups: params['pushups'].to_i,
-        squats: params['squats'].to_i,
-        planks: params['planks'].to_i,
       )
-      todays_exercises.save
     end
+
+    ExerciseCount.where(daily_exercise_id: todays_exercises.id).delete_all
+
+    param_names = params.keys.filter {|key| key.starts_with? 'exercise_'}
+    results = param_names.map do |param_key|
+      id = param_key.split('_')[1].to_i
+      count = params[param_key]
+
+      ExerciseCount.new(exercise_id: id, count: count)
+    end
+
+    todays_exercises.exercise_counts = results
     redirect_to :root
   end
 
   def simulate_form
+    @exercises = Exercise.all
     @player1_values = { pushups: params[:pushups1].to_i, squats: params[:squats1].to_i, planks: params[:planks1].to_i }
     @player2_values = { pushups: params[:pushups2].to_i, squats: params[:squats2].to_i, planks: params[:planks2].to_i }
   end

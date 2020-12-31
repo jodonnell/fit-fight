@@ -10,20 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_28_185218) do
+ActiveRecord::Schema.define(version: 2020_12_31_163729) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "daily_exercises", force: :cascade do |t|
     t.date "date"
-    t.integer "pushups"
-    t.integer "squats"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "planks"
     t.index ["user_id"], name: "index_daily_exercises_on_user_id"
+  end
+
+  create_table "exercise_counts", force: :cascade do |t|
+    t.bigint "daily_exercise_id"
+    t.bigint "exercise_id"
+    t.integer "count"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["daily_exercise_id"], name: "index_exercise_counts_on_daily_exercise_id"
+    t.index ["exercise_id"], name: "index_exercise_counts_on_exercise_id"
+  end
+
+  create_table "exercises", force: :cascade do |t|
+    t.string "name"
+    t.string "exercise_type"
+    t.string "url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", force: :cascade do |t|

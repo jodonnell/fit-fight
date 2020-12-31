@@ -6,7 +6,22 @@ class Fight
   end
 
   def self.default_vars
-    { min_damage: 5, max_damage: 10, min_block: 0, max_block: 5, pushups: 0, squats: 0, planks: 0, name: '', hp: 40, has_evaded: false }
+    {
+      min_damage: 5,
+      max_damage: 10,
+      min_block: 0,
+      max_block: 5,
+      name: '',
+      hp: 40,
+      has_evaded: false,
+      'Push Ups' => 0,
+      'Squats' => 0,
+      'Planks' => 0,
+      'Running' => 0,
+      'Rowing' => 0,
+      'Curls' => 0,
+      'Shoulder Press' => 0,
+    }
   end
 
   def fight
@@ -62,20 +77,20 @@ class Fight
   end
 
   def attack_power player
-    min_attack = player[:min_damage] * (1 + player[:pushups] / 100.0)
-    max_attack = player[:max_damage] * (1 + player[:pushups] / 100.0)
+    min_attack = player[:min_damage] * (1 + player['Push Ups'] / 100.0)
+    max_attack = player[:max_damage] * (1 + player['Push Ups'] / 100.0)
     rand(min_attack...max_attack)
   end
 
   def block_power player
-    min_block = player[:min_block] * (1 + player[:squats] / 100.0)
-    max_block = player[:max_block] * (1 + player[:squats] / 100.0)
+    min_block = player[:min_block] * (1 + player['Squats'] / 100.0)
+    max_block = player[:max_block] * (1 + player['Squats'] / 100.0)
     rand(min_block...max_block)
   end
 
   def evaded? player
     return false if player[:has_evaded]
-    chance = [player[:planks] * 4, 20].min
+    chance = [player['Planks'] * 4, 20].min
     has_evaded = rand(0...100) < chance
 
     player[:has_evaded] = true if has_evaded
@@ -91,7 +106,7 @@ class Fight
   end
 
   def intro player
-    @output.push("#{player[:name]} did #{player[:pushups]} pushups, #{player[:squats]} squats, #{player[:planks]} minutes of planks")
+    @output.push("#{player[:name]} did #{player['Push Ups']} pushups, #{player['Squats']} squats, #{player['Planks']} minutes of planks")
   end
 
   def newline
