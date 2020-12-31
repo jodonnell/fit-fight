@@ -31,11 +31,25 @@ class WelcomeController < ApplicationController
 
   def simulate_form
     @exercises = Exercise.all
-    @player1_values = { pushups: params[:pushups1].to_i, squats: params[:squats1].to_i, planks: params[:planks1].to_i }
-    @player2_values = { pushups: params[:pushups2].to_i, squats: params[:squats2].to_i, planks: params[:planks2].to_i }
+
+    @player1_values = {}
+    @player2_values = {}
+    param_names = params.keys.filter {|key| key.starts_with? 'exercise_'}
+    results = param_names.map do |param_key|
+      id = param_key.split('_')[1].to_i
+      count = params[param_key].to_i
+
+      if param_key.split('_')[2] == '1'
+        @player1_values[exercise_by_id[id].name] = count
+      else
+        @player2_values[exercise_by_id[id].name] = count
+      end
+    end
   end
 
   def simulate
+    @exercise_by_id = exercise_by_id
+
     total_sims = 1000
     player1_wins = 0
     player2_wins = 0
@@ -46,8 +60,8 @@ class WelcomeController < ApplicationController
       player2 = Fight.default_vars
       player2[:name] = 'Chief'
 
-      player1.update({ pushups: params["pushups1"].to_i, squats: params["squats1"].to_i, planks: params["planks1"].to_i })
-      player2.update({ pushups: params["pushups2"].to_i, squats: params["squats2"].to_i, planks: params["planks2"].to_i })
+      update_player player1, '1'
+      update_player player2, '2'
 
       sim = Fight.new(player1, player2)
       sim.fight
@@ -65,9 +79,28 @@ class WelcomeController < ApplicationController
     else
       flash.alert = "Chief wins #{player2_percent * 100}% of the time"
     end
-    redirect_to simulate_path(
-      pushups1: params[:pushups1], squats1: params[:squats1], planks1: params[:planks1],
-      pushups2: params[:pushups2], squats2: params[:squats2], planks2: params[:planks2]
-    )
+    redirect_to simulate_path(request.params)
   end
+
+  private
+  def update_player player, player_num
+    param_names = params.keys.filter {|key| key.starts_with? 'exercise_'}
+    results = param_names.map do |param_key|
+      id = param_key.split('_')[1].to_i
+      if param_key.split('_')[2] == player_num
+        count = params[param_key]
+        player[@exercise_by_id[id].name] = count.to_i
+      end
+    end
+  end
+
+  def exercise_by_id
+    exercises = Exercise.all
+    exercise_by_id = {}
+    exercises.each do |exercise|
+      exercise_by_id[exercise.id] = exercise
+    end
+    exercise_by_id
+  end
+
 end
