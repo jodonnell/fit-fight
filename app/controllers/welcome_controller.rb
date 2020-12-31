@@ -74,6 +74,7 @@ class WelcomeController < ApplicationController
 
     player1_percent = player1_wins / total_sims.to_f
     player2_percent = player2_wins / total_sims.to_f
+
     if player1_percent > player2_percent
       flash.alert = "Jacob wins #{player1_percent * 100}% of the time"
     else
@@ -89,7 +90,7 @@ class WelcomeController < ApplicationController
       id = param_key.split('_')[1].to_i
       if param_key.split('_')[2] == player_num
         count = params[param_key]
-        player[@exercise_by_id[id].name] = count.to_i
+        player[:exercises][@exercise_by_id[id].name] = count.to_i
       end
     end
   end

@@ -1,7 +1,7 @@
 def update_player player, exercises
   return unless exercises
   exercises.exercise_counts.each do |count|
-    player[count.exercise.name] = count.count
+    player[:exercises][count.exercise.name] = count.count
   end
 end
 
