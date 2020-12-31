@@ -15,14 +15,6 @@ class WelcomeController < ApplicationController
 
   def update
     todays_exercises = DailyExercise.find_by(user_id: current_user['id'], date: Date.today)
-
-    unless todays_exercises
-      todays_exercises = DailyExercise.create(
-        user_id: current_user['id'],
-        date: Date.today,
-      )
-    end
-
     ExerciseCount.where(daily_exercise_id: todays_exercises.id).delete_all
 
     param_names = params.keys.filter {|key| key.starts_with? 'exercise_'}

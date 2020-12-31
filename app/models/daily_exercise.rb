@@ -5,6 +5,13 @@ class DailyExercise < ApplicationRecord
   has_many :exercises, through: :exercise_counts
 
   def self.get_user_and_day id, day
-    DailyExercise.includes(:exercise_counts, :exercises).find_by(user_id: id, date: day)
+    result = DailyExercise.includes(:exercise_counts, :exercises).find_by(user_id: id, date: day)
+    if result.nil?
+      result = DailyExercise.create(
+        user_id: id,
+        date: day,
+      )
+    end
+    result
   end
 end
