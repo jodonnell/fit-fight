@@ -57,18 +57,33 @@ class WelcomeController < ApplicationController
     total_sims.times do |x|
       player1 = Fight.default_vars
       player1[:name] = 'Jacob'
+      player1[:fighter] = MockFighter.new 40
       player2 = Fight.default_vars
       player2[:name] = 'Chief'
+      player2[:fighter] = MockFighter.new 40
 
       update_player player1, '1'
       update_player player2, '2'
 
-      sim = Fight.new(player1, player2)
-      sim.fight
-      if player1[:wins]
-        player1_wins += 1
-      elsif player2[:wins]
-        player2_wins += 1
+      rounds = 0
+      while player1[:fighter].wins == 0 && player2[:fighter].wins == 0 do
+        rounds += 1
+        break if rounds > 100
+        sim = Fight.new(player1, player2)
+
+        sim.fight
+
+        win_1 = player1[:fighter].wins > 0
+        win_2 = player2[:fighter].wins > 0
+
+        if win_1 && win_2
+          player1_wins += 1
+          player2_wins += 1
+        elsif win_1
+          player1_wins += 1
+        elsif win_2
+          player2_wins += 1
+        end
       end
     end
 

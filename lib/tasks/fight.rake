@@ -15,14 +15,20 @@ namespace :fight do
 
     player1 = Fight.default_vars
     player1[:name] = 'Jacob'
+    player1[:hp] = jacob.fighter.hp
+    player1[:fighter] = jacob.fighter
+
     player2 = Fight.default_vars
     player2[:name] = 'Chief'
+    player2[:hp] = chief.fighter.hp
+    player2[:fighter] = chief.fighter
 
     update_player player1, j_exercise
     update_player player2, c_exercise
 
     sim = Fight.new(player1, player2)
     output = sim.fight
+
     full_output = "<html><body>#{output.join('<br>')}</body></html>"
     FightMailer.fight_email(jacob, chief, full_output).deliver_now
   end

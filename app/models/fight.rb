@@ -31,32 +31,18 @@ class Fight
     intro @player2
     newline
 
-    adjust_health @player1
-    adjust_health @player2
+    heal @player1
+    heal @player2
+    newline
 
-    5.times do |round|
-      @output.push "Round #{round + 1}"
+    attack @player1, @player2
+    attack @player2, @player1
 
-      attack @player1, @player2
-      attack @player2, @player1
+    p1_dead = player_dead?(@player1)
+    p2_dead = player_dead?(@player2)
+    newline
 
-      p1_dead = player_dead?(@player1)
-      p2_dead = player_dead?(@player2)
-      break if p1_dead || p2_dead
-      newline
-    end
-
-    if (@player1[:hp] > @player2[:hp]) && @player1[:hp] > 0
-      @player1[:wins] = true
-      @player2[:wins] = false
-      @output.push("#{@player1[:name]} wins")
-    elsif (@player2[:hp] > @player1[:hp]) && @player2[:hp] > 0
-      @player2[:wins] = true
-      @player1[:wins] = false
-      @output.push("#{@player2[:name]} wins")
-    else
-      puts "tie"
-    end
+    is_over?
 
     @output
   end
@@ -76,10 +62,13 @@ class Fight
     defender[:hp] = defender[:hp] - damage unless did_evade
 
     @output.push("#{attacker[:name]} attacked for #{ap.round} damage")
+
+    if critical_hit
+      @output.push("#{attacker[:name]} just SLAMMED #{defender[:name]}")
+    end
+
     if did_evade
       @output.push("#{defender[:name]} swiftly dodged the attack")
-    elsif critical_hit
-      @output.push("#{attacker[:name]} just SLAMMED #{defender[:name]}")
     else
       @output.push("#{defender[:name]} blocked #{bp.round} damage")
       @output.push("#{defender[:name]} took #{damage.round} damage")
@@ -139,8 +128,47 @@ class Fight
     @output.push("")
   end
 
-  def adjust_health player
-    player[:hp] = player[:hp] * (1 + player[:exercises]['Running'] / 100.0)
-    player[:hp] = player[:hp] * (1 + (player[:exercises]['Rowing'] * 1.5) / 100.0)
+  def heal player
+    running_heal = player[:exercises]['Running'] / 2
+    rowing_heal = player[:exercises]['Rowing'] / 2
+
+    total_heal = running_heal + rowing_heal
+    player[:hp] += total_heal
+    if total_heal > 0
+      @output.push("#{player[:name]} healed #{total_heal} health and now has #{player[:hp]} life")
+    end
+  end
+
+  def is_over?
+    @player1[:fighter].hp = @player1[:hp]
+    @player2[:fighter].hp = @player2[:hp]
+
+    killed_each_other = @player1[:hp] < 0 && @player2[:hp] < 0
+    player1_dead = @player1[:hp] < 0
+    player2_dead = @player2[:hp] < 0
+
+    if killed_each_other or player1_dead or player2_dead
+      @player1[:fighter].hp = 40
+      @player2[:fighter].hp = 40
+    end
+
+    if killed_each_other
+      @output.push("The mighty titans die in each others arms.  Farewell sweet princes.")
+      @player1[:fighter].wins += 1
+      @player2[:fighter].wins += 1
+    else
+      if player1_dead
+        @output.push("#{@player2[:name]} is victorious, he pees over #{@player1[:name]}'s corpse.")
+        @player2[:fighter].wins += 1
+      end
+
+      if player2_dead
+        @output.push("#{@player1[:name]} is victorious, he pees over #{@player2[:name]}'s corpse.")
+        @player1[:fighter].wins += 1
+      end
+    end
+
+    @player1[:fighter].save
+    @player2[:fighter].save
   end
 end
