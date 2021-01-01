@@ -55,7 +55,7 @@ class Fight
       @player1[:wins] = false
       @output.push("#{@player2[:name]} wins")
     else
-      byebug
+      puts "tie"
     end
 
     @output
