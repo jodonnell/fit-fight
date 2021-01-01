@@ -129,8 +129,8 @@ class Fight
   end
 
   def heal player
-    running_heal = player[:exercises]['Running'] / 2
-    rowing_heal = player[:exercises]['Rowing'] / 2
+    running_heal = player[:exercises]['Running'] / 4
+    rowing_heal = player[:exercises]['Rowing'] / 4
 
     total_heal = running_heal + rowing_heal
     player[:hp] += total_heal
