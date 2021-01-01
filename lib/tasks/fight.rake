@@ -9,7 +9,7 @@ namespace :fight do
   task start: [:environment] do
     jacob = User.find(1)
     chief = User.find(2)
-    yesterday = Date.today# - 1.day
+    yesterday = Date.today - 1.day
     j_exercise = DailyExercise.get_user_and_day 1, yesterday
     c_exercise = DailyExercise.get_user_and_day 2, yesterday
 
