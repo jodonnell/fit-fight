@@ -131,8 +131,9 @@ class Fight
   def heal player
     running_heal = player[:exercises]['Running']
     rowing_heal = player[:exercises]['Rowing']
+    tennis_heal = player[:exercises]['Tennis'] / 4.0
 
-    total_heal_percent = running_heal + rowing_heal
+    total_heal_percent = running_heal + rowing_heal + tennis_heal
     if rand(0...100) < total_heal_percent
       player[:hp] += 8
       @output.push("#{player[:name]} healed 8 health and now has #{player[:hp]} life")
