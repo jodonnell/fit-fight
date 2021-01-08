@@ -122,7 +122,7 @@ class WelcomeController < ApplicationController
   end
 
   def todays_exercises_for_user user_id
-    todays_exercises = DailyExercise.get_user_and_day current_user['id'], Date.today
+    todays_exercises = DailyExercise.get_user_and_day user_id, Date.today
     values = Exercise.empty_hash
 
     todays_exercises.exercise_counts.each do |count|
