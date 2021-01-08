@@ -1,6 +1,15 @@
-<div class="form">
+<div class="Home">
 <%= form_with url: "/daily-exercise", method: :post do |f| %>
-  <%= render "exercises", form: f, values: @values %>
+  <%= render "exercises", form: f, values: @users_exercises[0] %>
   <%= f.submit "Save" %>
+<% end %>
+
+<%= form_with url: "/", method: :post do |f| %>
+  <% @users_exercises.drop(1).each do |users_exercise| %>
+    <div class="Home-name">
+        <%= users_exercise[:name] %>
+    </div>
+    <%= render "exercises", form: f, values: users_exercise, disabled: true %>
+  <% end %>
 <% end %>
 </div>

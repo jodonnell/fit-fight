@@ -1,4 +1,5 @@
 <% postfix = '' if local_assigns[:postfix].nil? %>
+<% disabled = false if local_assigns[:disabled].nil? %>
 
 <% @exercises.each do |exercise| %>
   <div class="form-line">
@@ -14,6 +15,6 @@
       <% if exercise.url %>
         <%= link_to '(watch)', exercise.url %>
       <% end %>
-    <%= form.number_field "exercise_#{exercise.id}#{postfix}", value: values[exercise.name] %>
+    <%= form.number_field "exercise_#{exercise.id}#{postfix}", value: values[exercise.name], disabled: disabled %>
   </div>
 <% end %>

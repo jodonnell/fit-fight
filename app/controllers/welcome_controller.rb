@@ -5,11 +5,13 @@ class WelcomeController < ApplicationController
   def index
     @exercises = Exercise.all
 
-    @todays_exercises = DailyExercise.get_user_and_day current_user['id'], Date.today
-    @values = Exercise.empty_hash
+    @users_exercises = [todays_exercises_for_user(current_user['id'])]
 
-    @todays_exercises.exercise_counts.each do |count|
-      @values[count.exercise.name] = count.count
+    user2s = Game.where("user1_id=#{current_user['id']}").map(&:user2_id)
+    user1s = Game.where("user2_id=#{current_user['id']}").map(&:user1_id)
+    users = user1s + user2s
+    users.map do |user_id|
+      @users_exercises.push(todays_exercises_for_user(user_id))
     end
   end
 
@@ -119,4 +121,14 @@ class WelcomeController < ApplicationController
     exercise_by_id
   end
 
+  def todays_exercises_for_user user_id
+    todays_exercises = DailyExercise.get_user_and_day current_user['id'], Date.today
+    values = Exercise.empty_hash
+
+    todays_exercises.exercise_counts.each do |count|
+      values[count.exercise.name] = count.count
+    end
+    values[:name] = User.find(user_id).name
+    values
+  end
 end

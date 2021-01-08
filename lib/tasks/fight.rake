@@ -1,9 +1,6 @@
 def update_player player, exercises
   return unless exercises
-
-  Exercise.all.each do |exercise|
-    player[:exercises][exercise.name] = 0
-  end
+  player[:exercises] = Exercise.empty_hash
 
   exercises.exercise_counts.each do |count|
     player[:exercises][count.exercise.name] = count.count
