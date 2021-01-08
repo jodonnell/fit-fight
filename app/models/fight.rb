@@ -148,11 +148,6 @@ class Fight
     player1_dead = @player1[:hp] < 0
     player2_dead = @player2[:hp] < 0
 
-    if killed_each_other or player1_dead or player2_dead
-      @player1[:fighter].hp = 40
-      @player2[:fighter].hp = 40
-    end
-
     if killed_each_other
       @output.push("The mighty titans die in each others arms.  Farewell sweet princes.")
       @player1[:fighter].wins += 1
@@ -167,6 +162,11 @@ class Fight
         @output.push("#{@player1[:name]} is victorious, he pees over #{@player2[:name]}'s corpse.")
         @player1[:fighter].wins += 1
       end
+    end
+
+    if killed_each_other or player1_dead or player2_dead
+      @player1[:fighter].hp = 40 + @player1[:fighter].wins
+      @player2[:fighter].hp = 40 + @player2[:fighter].wins
     end
 
     @player1[:fighter].save
