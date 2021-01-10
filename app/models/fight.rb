@@ -91,7 +91,8 @@ class Fight
 
   def evaded? player
     return false if player[:has_evaded]
-    chance = [player[:exercises]['Planks'] * 4, 20].min
+    total = player[:exercises]['Planks'] + (player[:exercises]['Chin Ups'] / 2)
+    chance = [total * 4, 20].min
     has_evaded = rand(0...100) < chance
 
     player[:has_evaded] = true if has_evaded
@@ -99,12 +100,14 @@ class Fight
   end
 
   def critical_damage? player
-    chance = player[:exercises]['Curls'] / 100.0
+    total = player[:exercises]['Shoulder Press'] + player[:exercises]['Bench Press']
+    chance = total / 100.0
     return rand(0...100) < chance
   end
 
   def critical_damage_multiplier player
-    chance = player[:exercises]['Shoulder Press'] / 1000.0
+    total = player[:exercises]['Curls'] + player[:exercises]['Overhead Dumbbell Tricep Extension']
+    chance = total / 1000.0
     2 + chance
   end
 
