@@ -1,3 +1,4 @@
+
 def update_player player, exercises
   return unless exercises
   player[:exercises] = Exercise.empty_hash
@@ -9,7 +10,9 @@ end
 
 namespace :fight do
   task start: [:environment] do
+
     Game.all.each do |game|
+
       user1 = User.find(game.user1_id)
       user2 = User.find(game.user2_id)
       fighter1 = Fighter.find(game.fighter1_id)
@@ -37,6 +40,7 @@ namespace :fight do
 
       full_output = "<html><body>#{output.join('<br>')}</body></html>"
       FightMailer.fight_email(user1, user2, full_output).deliver_now
+      #puts full_output
     end
   end
 end
